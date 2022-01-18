@@ -1,4 +1,5 @@
 import React,{useState} from "react";
+import axios from "axios";
 import './Todo.css'
 const Todo=props=>{
 
@@ -22,7 +23,15 @@ const Todo=props=>{
         setTodoState({
             userInput:todoState.userInput,
             todoList: todoState.todoList.concat(todoState.userInput),
-    })}
+    })
+        axios.post('https://hooks-practice-2139c-default-rtdb.firebaseio.com/todos.json',{name: todoState.userInput})
+                    .then(res=>{
+                            console.log(res);
+
+                    }).catch(err=>{
+                        console.log(err);
+                    })
+}
     return(
     <React.Fragment>
         
@@ -43,9 +52,9 @@ const Todo=props=>{
         <ul> 
             {/*<li>{TodoList}</li> */}
 
-           {todoState.todoList.map(todo=>(
+           {todoState.todoList.map((todo,i)=>(
 
-            <li> {todo}</li>
+            <li key={i}> {todo}</li>
          ) )}
 
            
