@@ -10,6 +10,7 @@ const Todo=props=>{
     // we use useEffect to execute function when component load first time
 
     //but also we can execute in other seenarios
+    //normalyy useEffect run after every render cycle that's why we need to control of execution
 
     
     useEffect(()=>{
@@ -29,10 +30,22 @@ const Todo=props=>{
                 setTodoList(todos);
                 console.log("End from useEffect");
             
-
+                
             });
+
+            return ()=>{
+                //it will run in every render cycle
+                console.log("cleanup")
+            }
        
-    })
+    },[todoName]);
+
+
+    useEffect(()=>{
+        document.addEventListener('mousemove',event=>{
+            console.log(event.clientX,event.clientY)
+        })
+    },[])
 
     const inputHandler=event=>{
       
@@ -42,7 +55,7 @@ const Todo=props=>{
     const todoListHandler=()=>{
 
         setTodoList(TodoList.concat(todoName))
-        axios.post('https://hooks-practice-2139c-default-rtdb.firebaseio.com/todos.json',{name: TodoList})
+        axios.post('https://hooks-practice-2139c-default-rtdb.firebaseio.com/todos.json',{name: todoName})
                     .then(res=>{
                             console.log(res);
 
