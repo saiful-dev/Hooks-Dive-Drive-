@@ -3,18 +3,26 @@ import './Todo.css'
 const Todo=props=>{
 
 
-    const [todoName,settodoName]=useState('');
+   // const [todoName,settodoName]=useState('');
+    //const [TodoList,setTodoList]=useState([]);
 
-    const [TodoList,setTodoList]=useState([]);
+    //replace two state into single state
+    const [todoState,setTodoState]=useState({userInput:'',todoList:[] })
 
     const inputHandler=event=>{
-        settodoName(event.target.value);
-        //console.log(todoName)
+        setTodoState({
+                userInput: event.target.value,
+                todoList: todoState.todoList,
+        
+        
+        })
     }
 
     const todoListHandler=()=>{
-        setTodoList(TodoList.concat(todoName))
-    }
+        setTodoState({
+            userInput:todoState.userInput,
+            todoList: todoState.todoList.concat(todoState.userInput),
+    })}
     return(
     <React.Fragment>
         
@@ -23,7 +31,7 @@ const Todo=props=>{
                     placeholder="Todo"
                     onChange={inputHandler}  
                     //The onChange event in React detects when the value of an input element changes
-                    value={todoName}/>
+                    value={todoState.userInput}/>
                     <ul>
 
                     </ul>
@@ -35,7 +43,7 @@ const Todo=props=>{
         <ul> 
             {/*<li>{TodoList}</li> */}
 
-           {TodoList.map(todo=>(
+           {todoState.todoList.map(todo=>(
 
             <li> {todo}</li>
          ) )}
