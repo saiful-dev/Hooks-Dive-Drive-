@@ -1,30 +1,48 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import axios from "axios";
 import './Todo.css'
 const Todo=props=>{
 
 
-   // const [todoName,settodoName]=useState('');
-    //const [TodoList,setTodoList]=useState([]);
+     const [todoName,settodoName]=useState('');
+    const [TodoList,setTodoList]=useState([]);
 
-    //replace two state into single state
-    const [todoState,setTodoState]=useState({userInput:'',todoList:[] })
+    // we use useEffect to execute function when component load first time
+
+    //but also we can execute in other seenarios
+
+    
+    useEffect(()=>{
+        axios.get('https://hooks-practice-2139c-default-rtdb.firebaseio.com/todos.json')
+            .then(result=>{
+
+                console.log("start from UseEffect");
+                console.log(result);
+                const todoData=result.data;
+                console.log(todoData);
+
+                const todos=[];
+                for(const key in todoData){
+                    todos.push({id:key, name:todoData[key].name})
+                }
+                console.log(todos);
+                setTodoList(todos);
+                console.log("End from useEffect");
+            
+
+            });
+       
+    })
 
     const inputHandler=event=>{
-        setTodoState({
-                userInput: event.target.value,
-                todoList: todoState.todoList,
-        
-        
-        })
+      
+        settodoName(event.target.value);
     }
 
     const todoListHandler=()=>{
-        setTodoState({
-            userInput:todoState.userInput,
-            todoList: todoState.todoList.concat(todoState.userInput),
-    })
-        axios.post('https://hooks-practice-2139c-default-rtdb.firebaseio.com/todos.json',{name: todoState.userInput})
+
+        setTodoList(TodoList.concat(todoName))
+        axios.post('https://hooks-practice-2139c-default-rtdb.firebaseio.com/todos.json',{name: TodoList})
                     .then(res=>{
                             console.log(res);
 
@@ -40,7 +58,7 @@ const Todo=props=>{
                     placeholder="Todo"
                     onChange={inputHandler}  
                     //The onChange event in React detects when the value of an input element changes
-                    value={todoState.userInput}/>
+                    value={todoName}/>
                     <ul>
 
                     </ul>
@@ -50,11 +68,11 @@ const Todo=props=>{
         
 
         <ul> 
-            {/*<li>{TodoList}</li> */}
+         
 
-           {todoState.todoList.map((todo,i)=>(
+           {TodoList.map((todo,i)=>(
 
-            <li key={i}> {todo}</li>
+            <li key={todo.id}> {todo.name}</li>
          ) )}
 
            
